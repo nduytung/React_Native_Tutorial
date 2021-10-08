@@ -13,6 +13,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Pressable,
+  Alert,
+  ToastAndroid,
 } from 'react-native';
 
 //hàm này sẽ render ra tất cả các nội dung hiển thị
@@ -21,8 +23,36 @@ const App = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const onPressHandler = () => {
-    setSubmitted(!submitted);
+    if (name.length > 3) setSubmitted(!submitted);
+    // Alert.alert(
+    //   'Warning',
+    //   'The name must be longer than 3 characters',
+    //   [
+    //     {
+    //       text: 'Do not show again',
+    //       onPress: () => console.warn('Do not show again'),
+    //     },
+    //     {
+    //       text: 'Cancel',
+    //       onPress: () => console.warn('Cancel'),
+    //     },
+    //     {
+    //       text: 'Ok',
+    //       onPress: () => {
+    //         console.log('Ok');
+    //       },
+    //     },
+    //   ],
+    //   {cancelable: true, onDismiss: () => console.log('dismiss')},
+    // );
+    else
+      ToastAndroid.showWithGravity(
+        'The name must be longer than 3 characters',
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+      );
   };
+
   return (
     <View style={styles.body}>
       <Text style={styles.text}> Please write your name: </Text>
@@ -34,29 +64,6 @@ const App = () => {
         placeholder="e.g. John"
         onChangeText={value => setName(value)}
       />
-
-      {/* <Button title={submitted ? 'Clear' : 'Submit'} onPress={onPressHandler} /> */}
-
-      {/* <TouchableOpacity
-        activeOpacity={0.5}
-        style={styles.button}
-        onPress={onPressHandler}>
-        <Text style={styles.text}> {submitted ? 'Clear' : 'Submit'} </Text>
-      </TouchableOpacity> */}
-
-      {/* <TouchableHighlight
-        activeOpacity={0.5}
-        style={styles.button}
-        onPress={onPressHandler}>
-        <Text style={styles.text}> {submitted ? 'Clear' : 'Submit'} </Text>
-      </TouchableHighlight> */}
-
-      {/* 
-      <TouchableWithoutFeedback onPress={onPressHandler}>
-        <View style={styles.button}>
-          <Text style={styles.text}> {submitted ? 'Clear' : 'Submit'} </Text>
-        </View>
-      </TouchableWithoutFeedback> */}
 
       <Pressable
         delayLongPress={2000}
