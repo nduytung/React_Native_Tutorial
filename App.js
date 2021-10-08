@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Pressable,
+  Modal,
   Alert,
   ToastAndroid,
 } from 'react-native';
@@ -21,40 +22,41 @@ import {
 const App = () => {
   const [name, setName] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   const onPressHandler = () => {
     if (name.length > 3) setSubmitted(!submitted);
-    // Alert.alert(
-    //   'Warning',
-    //   'The name must be longer than 3 characters',
-    //   [
-    //     {
-    //       text: 'Do not show again',
-    //       onPress: () => console.warn('Do not show again'),
-    //     },
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.warn('Cancel'),
-    //     },
-    //     {
-    //       text: 'Ok',
-    //       onPress: () => {
-    //         console.log('Ok');
-    //       },
-    //     },
-    //   ],
-    //   {cancelable: true, onDismiss: () => console.log('dismiss')},
-    // );
-    else
-      ToastAndroid.showWithGravity(
-        'The name must be longer than 3 characters',
-        ToastAndroid.LONG,
-        ToastAndroid.TOP,
-      );
+    else {
+      setShowWarning(true);
+    }
   };
 
   return (
     <View style={styles.body}>
+      <Modal
+        visible={showWarning}
+        transparent
+        animationType={'fade'}
+        onRequestClose={() => setShowWarning(false)}>
+        <View style={styles.centered_view}>
+          <View style={styles.warning_modal}>
+            <View style={styles.warning_title}>
+              <Text style={styles.text}> WARNING! </Text>
+            </View>
+            <View style={styles.warning_body}>
+              <Text style={styles.text}>
+                The name must be longer than 3 characters
+              </Text>
+            </View>
+            <Pressable
+              style={styles.warning_button}
+              android_ripple={{color: 'white'}}
+              onPress={() => setShowWarning(false)}>
+              <Text style={styles.text}>OK</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       <Text style={styles.text}> Please write your name: </Text>
       <TextInput
         style={styles.input}
@@ -103,7 +105,7 @@ const styles = StyleSheet.create({
   text: {
     color: 'black',
     fontSize: 20,
-    fontStyle: 'italic',
+    textAlign: 'center',
     alignItems: 'center',
     margin: 10,
   },
@@ -122,6 +124,37 @@ const styles = StyleSheet.create({
     width: 150,
     height: 50,
     alignItems: 'center',
+  },
+
+  centered_view: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    backgroundColor: '#00000099',
+  },
+  warning_modal: {
+    width: 300,
+    height: 300,
+    backgroundColor: 'white',
+    border: 1,
+    borderColor: 'black',
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  warning_title: {
+    backgroundColor: 'yellow',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  warning_body: {
+    height: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  warning_button: {
+    backgroundColor: 'cyan',
   },
 });
 
