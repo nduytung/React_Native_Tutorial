@@ -10,14 +10,20 @@ import {
   FlatList,
   SectionList,
   TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Pressable,
 } from 'react-native';
 
 //hàm này sẽ render ra tất cả các nội dung hiển thị
 const App = () => {
   const [name, setName] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
+  const onPressHandler = () => {
+    setSubmitted(!submitted);
+  };
   return (
-    //phan nay danh cho SectionList
     <View style={styles.body}>
       <Text style={styles.text}> Please write your name: </Text>
       <TextInput
@@ -28,7 +34,46 @@ const App = () => {
         placeholder="e.g. John"
         onChangeText={value => setName(value)}
       />
-      <Text style={styles.text}> Your name is {name} </Text>
+
+      {/* <Button title={submitted ? 'Clear' : 'Submit'} onPress={onPressHandler} /> */}
+
+      {/* <TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.button}
+        onPress={onPressHandler}>
+        <Text style={styles.text}> {submitted ? 'Clear' : 'Submit'} </Text>
+      </TouchableOpacity> */}
+
+      {/* <TouchableHighlight
+        activeOpacity={0.5}
+        style={styles.button}
+        onPress={onPressHandler}>
+        <Text style={styles.text}> {submitted ? 'Clear' : 'Submit'} </Text>
+      </TouchableHighlight> */}
+
+      {/* 
+      <TouchableWithoutFeedback onPress={onPressHandler}>
+        <View style={styles.button}>
+          <Text style={styles.text}> {submitted ? 'Clear' : 'Submit'} </Text>
+        </View>
+      </TouchableWithoutFeedback> */}
+
+      <Pressable
+        delayLongPress={2000}
+        hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+        android_ripple={{color: 'dodgerblue'}}
+        style={({pressed}) => [
+          {
+            backgroundColor: pressed ? 'white' : 'lime',
+          },
+          styles.button,
+        ]}
+        onPress={onPressHandler}>
+        <Text style={styles.text}> {submitted ? 'Clear' : 'Submit'} </Text>
+      </Pressable>
+      {submitted ? (
+        <Text style={styles.text}> You are registered as {name} </Text>
+      ) : null}
     </View>
   );
 };
@@ -63,6 +108,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     borderWidth: 1,
     textAlign: 'center',
+    marginBottom: 10,
+  },
+
+  button: {
+    width: 150,
+    height: 50,
+    alignItems: 'center',
   },
 });
 
