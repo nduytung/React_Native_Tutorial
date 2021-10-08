@@ -15,7 +15,9 @@ import {
   Pressable,
   Modal,
   Alert,
+  Image,
   ToastAndroid,
+  ImageBackground,
 } from 'react-native';
 
 //hàm này sẽ render ra tất cả các nội dung hiển thị
@@ -32,7 +34,11 @@ const App = () => {
   };
 
   return (
-    <View style={styles.body}>
+    <ImageBackground
+      style={styles.body}
+      source={{
+        uri: 'https://apsachieveonline.org/wp-content/uploads/2020/02/1580739685_937_34-Hinh-nen-iOS-co-dien-danh-cho-iPhone-Ban.jpg',
+      }}>
       <Modal
         visible={showWarning}
         transparent
@@ -81,9 +87,22 @@ const App = () => {
         <Text style={styles.text}> {submitted ? 'Clear' : 'Submit'} </Text>
       </Pressable>
       {submitted ? (
-        <Text style={styles.text}> You are registered as {name} </Text>
-      ) : null}
-    </View>
+        <View style={styles.body}>
+          <Text style={styles.text}> You are registered as {name} </Text>
+          <Image
+            source={require('./assets/done.png')}
+            style={styles.image}
+            resizeMode="stretch"
+          />
+        </View>
+      ) : (
+        <Image
+          source={require('./assets/error.jpg')}
+          style={styles.image}
+          resizeMode="stretch"
+        />
+      )}
+    </ImageBackground>
   );
 };
 
@@ -91,8 +110,8 @@ const App = () => {
 //các classname gần tương tự như ở CSS, ta có thể sử dụng extension auto import để nó gợi ý
 const styles = StyleSheet.create({
   body: {
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
   },
 
   item: {
@@ -112,7 +131,7 @@ const styles = StyleSheet.create({
 
   input: {
     borderRadius: 5,
-    borderColor: '#555',
+    borderColor: 'white',
     width: 200,
     fontSize: 15,
     borderWidth: 1,
@@ -155,6 +174,12 @@ const styles = StyleSheet.create({
 
   warning_button: {
     backgroundColor: 'cyan',
+  },
+
+  image: {
+    width: 100,
+    height: 100,
+    margin: 10,
   },
 });
 
