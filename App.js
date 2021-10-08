@@ -24,33 +24,35 @@ const App = () => {
 
   const onPressHandler = () => {
     if (name.length > 3) setSubmitted(!submitted);
-    // Alert.alert(
-    //   'Warning',
-    //   'The name must be longer than 3 characters',
-    //   [
-    //     {
-    //       text: 'Do not show again',
-    //       onPress: () => console.warn('Do not show again'),
-    //     },
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.warn('Cancel'),
-    //     },
-    //     {
-    //       text: 'Ok',
-    //       onPress: () => {
-    //         console.log('Ok');
-    //       },
-    //     },
-    //   ],
-    //   {cancelable: true, onDismiss: () => console.log('dismiss')},
-    // );
-    else
+    else {
+      // Alert.alert(
+      //   'Warning',
+      //   'The name must be longer than 3 characters',
+      //   [
+      //     {
+      //       text: 'Do not show again',
+      //       onPress: () => console.warn('Do not show again'),
+      //     },
+      //     {
+      //       text: 'Cancel',
+      //       onPress: () => console.warn('Cancel'),
+      //     },
+      //     {
+      //       text: 'Ok',
+      //       onPress: () => {
+      //         console.log('Ok');
+      //       },
+      //     },
+      //   ],
+      //   {cancelable: true, onDismiss: () => console.log('dismiss')},
+      // );
+
       ToastAndroid.showWithGravity(
         'The name must be longer than 3 characters',
         ToastAndroid.LONG,
         ToastAndroid.TOP,
       );
+    }
   };
 
   return (
