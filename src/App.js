@@ -3,29 +3,21 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
-  Linking,
-  ScrollView,
-  RefreshControl,
-  FlatList,
-  SectionList,
   TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
   Pressable,
   Modal,
-  Alert,
   Image,
-  ToastAndroid,
   ImageBackground,
 } from 'react-native';
-
+import CustomButton from './CustomButton';
+import Header from './Header';
 //hàm này sẽ render ra tất cả các nội dung hiển thị
 const App = () => {
   const [name, setName] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
 
+  //kiểm tra điều kiện và render
   const onPressHandler = () => {
     if (name.length > 3) setSubmitted(!submitted);
     else {
@@ -36,9 +28,11 @@ const App = () => {
   return (
     <ImageBackground
       style={styles.body}
+      //cách thứ nhất để chèn ảnh vào RN: URI
       source={{
         uri: 'https://apsachieveonline.org/wp-content/uploads/2020/02/1580739685_937_34-Hinh-nen-iOS-co-dien-danh-cho-iPhone-Ban.jpg',
       }}>
+      <Header />
       <Modal
         visible={showWarning}
         transparent
@@ -73,31 +67,23 @@ const App = () => {
         onChangeText={value => setName(value)}
       />
 
-      <Pressable
-        delayLongPress={2000}
-        hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
-        android_ripple={{color: 'dodgerblue'}}
-        style={({pressed}) => [
-          {
-            backgroundColor: pressed ? 'white' : 'lime',
-          },
-          styles.button,
-        ]}
-        onPress={onPressHandler}>
-        <Text style={styles.text}> {submitted ? 'Clear' : 'Submit'} </Text>
-      </Pressable>
+      <CustomButton
+        onPressHandler={onPressHandler}
+        title={submitted ? 'Clear' : 'Submit'}
+        style={{margin: 40}}
+      />
       {submitted ? (
         <View style={styles.body}>
           <Text style={styles.text}> You are registered as {name} </Text>
           <Image
-            source={require('./assets/done.png')}
+            source={require('../assets/done.png')}
             style={styles.image}
             resizeMode="stretch"
           />
         </View>
       ) : (
         <Image
-          source={require('./assets/error.jpg')}
+          source={require('../assets/error.jpg')}
           style={styles.image}
           resizeMode="stretch"
         />
@@ -139,12 +125,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-  button: {
-    width: 150,
-    height: 50,
-    alignItems: 'center',
-  },
-
   centered_view: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -159,6 +139,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderRadius: 20,
     overflow: 'hidden',
+    //overflow:hidden để ta không cần set border cho 2 component header và nút ok kia như video
   },
   warning_title: {
     backgroundColor: 'yellow',
