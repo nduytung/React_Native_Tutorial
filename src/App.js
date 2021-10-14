@@ -9,7 +9,7 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-const Tab = createMaterialTopTabNavigator();
+const Stack = createStackNavigator();
 
 import ScreenA from './ScreenA';
 import ScreenB from './ScreenB';
@@ -17,7 +17,8 @@ import ScreenB from './ScreenB';
 const App = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator
+      {/* đổi thành stack navigator vì tab navigator không thể truyền các props đuọc  */}
+      <Stack.Navigator
         options={({route}) => ({
           tabBarIcon: ({focused, size, color}) => {
             let iconName;
@@ -45,14 +46,21 @@ const App = () => {
         inactiveColor="purple"
         barStyle={{backgroundColor: 'purple'}}>
         {/* vì một số hạn chế của RN, đừng copy screen A rồi đổi tên thành screen B. HÃY GÕ MỚI HOÀN TOÀN  */}
-        <Tab.Screen
+        <Stack.Screen
           name="ScreenA"
           component={ScreenA}
           // options={{tabBarBadge: 3}}
           //tat header di bang option
         />
-        <Tab.Screen name="ScreenB" component={ScreenB} />
-      </Tab.Navigator>
+        <Stack.Screen
+          name="ScreenB"
+          component={ScreenB}
+          initialParams={{
+            ItemName: 'Item from stack navigator, not drawer ',
+            ItemId: 12,
+          }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

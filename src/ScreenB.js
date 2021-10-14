@@ -3,9 +3,10 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 
 import 'react-native-gesture-handler';
 
-const ScreenB = ({navigation}) => {
+const ScreenB = ({route, navigation}) => {
+  const {ItemName, ItemId} = route.params;
   const onPressHandler = () => {
-    navigation.goBack();
+    navigation.navigate('ScreenA', {Message: 'Message from screen B'});
   };
 
   return (
@@ -18,6 +19,8 @@ const ScreenB = ({navigation}) => {
         })}>
         <Text style={styles.text}>Back to screen A</Text>
       </Pressable>
+      <Text style={styles.text}>{ItemName} </Text>
+      <Text style={styles.text}>ID: {ItemId} </Text>
     </View>
   );
 };

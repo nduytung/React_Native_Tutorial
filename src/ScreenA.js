@@ -3,7 +3,7 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 
 import 'react-native-gesture-handler';
 
-const ScreenA = ({navigation}) => {
+const ScreenA = ({navigation, route}) => {
   const onPressHandler = () => {
     navigation.navigate('ScreenB');
     //neu dung replace, screen B se tro thanh screen duy nhat ton tai, khong back duoc
@@ -20,6 +20,7 @@ const ScreenA = ({navigation}) => {
         })}>
         <Text style={styles.text}>Go to screen B</Text>
       </Pressable>
+      <Text style={styles.text}> {route.params?.Message} </Text>
     </View>
   );
 };
