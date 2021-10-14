@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 
 import 'react-native-gesture-handler';
+import GlobalStyle from '../utils/GlobalStyle';
 
 const ScreenB = ({route, navigation}) => {
   const {ItemName, ItemId} = route.params;
@@ -11,13 +12,13 @@ const ScreenB = ({route, navigation}) => {
 
   return (
     <View style={styles.body}>
-      <Text style={styles.text}> Screen B</Text>
+      <Text style={[GlobalStyle.CustomFont, styles.text]}> Screen B</Text>
       <Pressable
         onPress={() => onPressHandler()}
         style={({pressed}) => ({
           backgroundColor: pressed ? 'white' : 'lime',
         })}>
-        <Text style={styles.text}>Back to screen A</Text>
+        <Text style={GlobalStyle.ButtonText}>Back to screen A</Text>
       </Pressable>
       <Text style={styles.text}>{ItemName} </Text>
       <Text style={styles.text}>ID: {ItemId} </Text>

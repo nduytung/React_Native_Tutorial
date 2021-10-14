@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 
 import 'react-native-gesture-handler';
+import GlobalStyle from '../utils/GlobalStyle';
 
 const ScreenA = ({navigation, route}) => {
   const Users = [
@@ -21,7 +22,7 @@ const ScreenA = ({navigation, route}) => {
 
   const [name, setName] = useState('');
   const onPressHandler = () => {
-    // navigation.navigate('ScreenB');
+    navigation.navigate('ScreenB');
     //neu dung replace, screen B se tro thanh screen duy nhat ton tai, khong back duoc
     // navigation.replace('ScreenB');
 
@@ -32,7 +33,7 @@ const ScreenA = ({navigation, route}) => {
 
   return (
     <View style={styles.body}>
-      <Text style={styles.text}> Screen A</Text>
+      <Text style={[GlobalStyle.CustomFont, styles.text]}> Screen A</Text>
       <Pressable
         onPress={() => onPressHandler()}
         style={({pressed}) => ({
@@ -54,7 +55,6 @@ const styles = StyleSheet.create({
 
   text: {
     fontSize: 40,
-    fontFamily: 'DancingScript-Regular',
     margin: 10,
   },
 });

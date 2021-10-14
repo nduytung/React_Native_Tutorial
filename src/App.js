@@ -11,8 +11,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const Stack = createStackNavigator();
 
-import ScreenA from './ScreenA';
-import ScreenB from './ScreenB';
+import ScreenA from './screens/ScreenA';
+import ScreenB from './screens/ScreenB';
 
 const App = () => {
   return (
