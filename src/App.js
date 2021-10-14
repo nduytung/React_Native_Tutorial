@@ -11,55 +11,17 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const Stack = createStackNavigator();
 
-import ScreenA from './screens/ScreenA';
-import ScreenB from './screens/ScreenB';
+import Login from './screens/Login';
+import Home from './screens/Home';
 
 const App = () => {
   return (
     <NavigationContainer>
       {/* đổi thành stack navigator vì tab navigator không thể truyền các props đuọc  */}
-      <Stack.Navigator
-        options={({route}) => ({
-          tabBarIcon: ({focused, size, color}) => {
-            let iconName;
-            if (route.name === 'ScreenA') {
-              iconName = 'autoprefixer';
-              size = focused ? 25 : 20;
-              color = focused ? 'pink' : 'white';
-            } else if (route.name === 'ScreenB') {
-              iconName = 'btc';
-              size = focused ? 25 : 20;
-              color = focused ? 'pink' : 'white';
-            }
-            return <FontAwesome5 name={iconName} size={size} color={color} />;
-          },
-        })}
-        // tabBarOptions={{
-        //   activeTintColor: 'pink',
-        //   inactiveTintColor: 'white',
-        //   activeBackgroundColor: 'white',
-        //   inactiveBackgroundColor: 'gray',
-        //   showLabel: true,
-        //   labelStyle: {fontSize: 14},
-        // }}
-        activeColor="white"
-        inactiveColor="purple"
-        barStyle={{backgroundColor: 'purple'}}>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         {/* vì một số hạn chế của RN, đừng copy screen A rồi đổi tên thành screen B. HÃY GÕ MỚI HOÀN TOÀN  */}
-        <Stack.Screen
-          name="ScreenA"
-          component={ScreenA}
-          // options={{tabBarBadge: 3}}
-          //tat header di bang option
-        />
-        <Stack.Screen
-          name="ScreenB"
-          component={ScreenB}
-          initialParams={{
-            ItemName: 'Item from stack navigator, not drawer ',
-            ItemId: 12,
-          }}
-        />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
   );
