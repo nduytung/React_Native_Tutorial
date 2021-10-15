@@ -1,11 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, Alert, TextInput, FlatList} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Alert,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import CustomButton from '../utils/CustomButton';
 import GlobalStyle from '../utils/GlobalStyle';
 import SQLite from 'react-native-sqlite-storage';
 import {useSelector, useDispatch} from 'react-redux';
 import {setName, setAge, increaseAge, getCities} from '../redux/actions';
+import PushNotification from 'react-native-push-notification';
 
 const db = SQLite.openDatabase(
   {
@@ -32,14 +41,6 @@ export default function Home({navigation, route}) {
 
   const getData = () => {
     try {
-      // AsyncStorage.getItem('UserData')
-      //     .then(value => {
-      //         if (value != null) {
-      //             let user = JSON.parse(value);
-      //             setName(user.Name);
-      //             setAge(user.Age);
-      //         }
-      //     })
       db.transaction(tx => {
         tx.executeSql('SELECT Name, Age FROM Users', [], (tx, results) => {
           var len = results.rows.length;
@@ -61,10 +62,6 @@ export default function Home({navigation, route}) {
       Alert.alert('Warning!', 'Please write your data.');
     } else {
       try {
-        // var user = {
-        //     Name: name
-        // }
-        // await AsyncStorage.mergeItem('UserData', JSON.stringify(user));
         db.transaction(tx => {
           tx.executeSql(
             'UPDATE Users SET Name=?',
@@ -103,6 +100,25 @@ export default function Home({navigation, route}) {
     }
   };
 
+  const handleNotification = item => {
+    PushNotification.cancelAllLocalNotifications();
+
+    PushNotification.localNotification({
+      channelId: 'test-channel',
+      title: 'You clicked on ' + item.country,
+      message: item.city,
+      color: 'red',
+    });
+
+    PushNotification.scheduleLocalNotification({
+      channelId: 'test-channel',
+      title: 'Alarm',
+      message: 'You clicked on ' + item.country,
+      date: new Date(Date.now() + 5 * 1000),
+      allowWhileIdle: true,
+    });
+  };
+
   return (
     <View style={styles.body}>
       <Text style={[GlobalStyle.CustomFont, styles.text]}>
@@ -112,39 +128,14 @@ export default function Home({navigation, route}) {
         data={cities}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (
-          <View style={styles.item}>
-            <Text style={styles.title}>{item.country || 'not found'}</Text>
-            <Text style={styles.subtitle}>{item.city || 'not found'}</Text>
-          </View>
+          <TouchableOpacity onPress={() => handleNotification(item)}>
+            <View style={styles.item}>
+              <Text style={styles.title}>{item.country || 'not found'}</Text>
+              <Text style={styles.subtitle}>{item.city || 'not found'}</Text>
+            </View>
+          </TouchableOpacity>
         )}
       />
-      {/* <Text style={[
-                GlobalStyle.CustomFont,
-                styles.text
-            ]}>
-                Your age is {age}
-            </Text>
-            <TextInput
-                style={styles.input}
-                placeholder='Enter your name'
-                value={name}
-                onChangeText={(value) => dispatch(setName(value))}
-            />
-            <CustomButton
-                title='Update'
-                color='#ff7f00'
-                onPressFunction={updateData}
-            />
-            <CustomButton
-                title='Remove'
-                color='#f40100'
-                onPressFunction={removeData}
-            />
-            <CustomButton
-                title='Increase Age'
-                color='#0080ff'
-                onPressFunction={()=>{dispatch(increaseAge())}}
-            /> */}
     </View>
   );
 }

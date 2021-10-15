@@ -14,6 +14,7 @@ import SQLite from 'react-native-sqlite-storage';
 import {useSelector, useDispatch} from 'react-redux';
 import {setAge, setName} from '../redux/actions';
 import userReducer from '../redux/reducers';
+import PushNotification from 'react-native-push-notification';
 
 const db = SQLite.openDatabase(
   {
@@ -62,11 +63,6 @@ const Login = ({navigation, route}) => {
     }
   };
 
-  useEffect(() => {
-    getData();
-    createTable();
-  }, []);
-
   //vì hàm này chạy async, nên ta phải sử dụng async/await để lấy đươc dữ liệu
   const setData = async () => {
     if (name === '' || age === '') Alert.alert('Please fill in your name');
@@ -87,6 +83,19 @@ const Login = ({navigation, route}) => {
       }
     }
   };
+
+  const createChannels = () => {
+    PushNotification.createChannel({
+      channelId: 'test-channel',
+      channelName: 'Test Channel',
+    });
+  };
+
+  useEffect(() => {
+    getData();
+    createTable();
+    createChannels();
+  }, []);
 
   return (
     <View style={styles.body}>
