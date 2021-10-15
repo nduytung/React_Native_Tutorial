@@ -1,21 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useEffect, useState} from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Alert,
-} from 'react-native';
-
-import 'react-native-gesture-handler';
-import GlobalStyle from '../utils/GlobalStyle';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, View, Text, Alert, TextInput, FlatList} from 'react-native';
 import CustomButton from '../utils/CustomButton';
+import GlobalStyle from '../utils/GlobalStyle';
 import SQLite from 'react-native-sqlite-storage';
 import {useSelector, useDispatch} from 'react-redux';
-import {increaseAge, setAge, setName} from '../redux/actions';
-import userReducer from '../redux/reducers';
+import {setName, setAge, increaseAge, getCities} from '../redux/actions';
 
 const db = SQLite.openDatabase(
   {
@@ -23,73 +13,79 @@ const db = SQLite.openDatabase(
     location: 'default',
   },
   () => {},
-  err => console.log(err),
+  error => {
+    console.log(error);
+  },
 );
 
-const Home = ({navigation, route}) => {
-  //lay state nay tu store thay vi khai bao cuc bo
-  const {name, age} = useSelector(state => state.userReducer);
-  //dispatch dung de goi cac actions
+export default function Home({navigation, route}) {
+  const {name, age, cities} = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
 
-  const getData = async () => {
+  // const [name, setName] = useState('');
+  // const [age, setAge] = useState('');
+
+  useEffect(() => {
+    getData();
+    dispatch(getCities());
+  }, []);
+
+  const getData = () => {
     try {
-      // AsyncStorage.getItem('User').then(value => {
-      //   if (value !== null) {
-      //     let user = JSON.parse(value);
-      //     setName(user.Name);
-      //     setAge(user.Age);
-      //   }
-      // });
+      // AsyncStorage.getItem('UserData')
+      //     .then(value => {
+      //         if (value != null) {
+      //             let user = JSON.parse(value);
+      //             setName(user.Name);
+      //             setAge(user.Age);
+      //         }
+      //     })
       db.transaction(tx => {
-        tx.executeSql(
-          'SELECT Name, Age FROM Users WHERE ID=1',
-          [],
-          (tx, result) => {
-            let len = result.rows.length;
-            if (len > 0) {
-              let userName = result.rows.item(0).Name;
-              let userAge = result.rows.item(0).Age;
-              dispatch(setName(userName));
-              dispatch(setAge(userAge));
-            }
-          },
-        );
+        tx.executeSql('SELECT Name, Age FROM Users', [], (tx, results) => {
+          var len = results.rows.length;
+          if (len > 0) {
+            var userName = results.rows.item(0).Name;
+            var userAge = results.rows.item(0).Age;
+            dispatch(setName(userName));
+            dispatch(setAge(userAge));
+          }
+        });
       });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const updateData = async () => {
-    if (name === '' || age === '') Alert.alert('Please fill in your name');
-    else {
-      //phải có try catch vì nếu đã là async thì chưa chắc sẽ thành công 100% (do đường truyền, do mất file,...)
+    if (name.length == 0) {
+      Alert.alert('Warning!', 'Please write your data.');
+    } else {
       try {
-        // const user = {
-        //   Name: name,
-        // };
-        // await AsyncStorage.mergeItem('User', JSON.stringify(user));
-
+        // var user = {
+        //     Name: name
+        // }
+        // await AsyncStorage.mergeItem('UserData', JSON.stringify(user));
         db.transaction(tx => {
           tx.executeSql(
             'UPDATE Users SET Name=?',
             [name],
             () => {
-              Alert.alert('Success', 'Your data has been updated');
+              Alert.alert('Success!', 'Your data has been updated.');
             },
-            err => console.log(err),
+            error => {
+              console.log(error);
+            },
           );
         });
-      } catch (err) {
-        Alert.alert(err);
+      } catch (error) {
+        console.log(error);
       }
     }
   };
 
-  const deleteData = async () => {
+  const removeData = async () => {
     try {
-      // await AsyncStorage.removeItem('User');
+      // await AsyncStorage.clear();
       db.transaction(tx => {
         tx.executeSql(
           'DELETE FROM Users',
@@ -97,54 +93,67 @@ const Home = ({navigation, route}) => {
           () => {
             navigation.navigate('Login');
           },
-          err => console.log(err),
+          error => {
+            console.log(error);
+          },
         );
       });
-    } catch (err) {
-      Alert.alert('error!');
+    } catch (error) {
+      console.log(error);
     }
   };
-
-  //chi chay một lần duy nhất khi khởi động app
-  useEffect(() => {
-    getData();
-  }, []);
 
   return (
     <View style={styles.body}>
       <Text style={[GlobalStyle.CustomFont, styles.text]}>
-        Welcome back, {name}{' '}
+        Welcome {name} !
       </Text>
-      <Text style={[GlobalStyle.CustomFont, styles.text]}>
-        You are {age} years old now{' '}
-      </Text>
-      <TextInput
-        onChangeText={value => dispatch(setName(value))}
-        style={styles.input}
-        placeholder="Enter your name"
+      <FlatList
+        data={cities}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({item}) => (
+          <View style={styles.item}>
+            <Text style={styles.title}>{item.country || 'not found'}</Text>
+            <Text style={styles.subtitle}>{item.city || 'not found'}</Text>
+          </View>
+        )}
       />
-      <CustomButton title="Update" onPressHandler={updateData} color="orange" />
-      <CustomButton
-        title="Delete"
-        onPressHandler={deleteData}
-        style={{marginTop: 10, backgroundColor: 'red'}}
-      />
-      <CustomButton
-        title="Increase age"
-        onPressHandler={() => dispatch(increaseAge())}
-        style={{marginTop: 10, backgroundColor: 'dodgerblue'}}
-      />
+      {/* <Text style={[
+                GlobalStyle.CustomFont,
+                styles.text
+            ]}>
+                Your age is {age}
+            </Text>
+            <TextInput
+                style={styles.input}
+                placeholder='Enter your name'
+                value={name}
+                onChangeText={(value) => dispatch(setName(value))}
+            />
+            <CustomButton
+                title='Update'
+                color='#ff7f00'
+                onPressFunction={updateData}
+            />
+            <CustomButton
+                title='Remove'
+                color='#f40100'
+                onPressFunction={removeData}
+            />
+            <CustomButton
+                title='Increase Age'
+                color='#0080ff'
+                onPressFunction={()=>{dispatch(increaseAge())}}
+            /> */}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
-
   text: {
     fontSize: 40,
     margin: 10,
@@ -154,12 +163,29 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#555',
     borderRadius: 10,
-    backgroundColor: 'white',
-    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    textAlign: 'center',
     fontSize: 20,
     marginTop: 130,
     marginBottom: 10,
   },
+  item: {
+    backgroundColor: '#ffffff',
+    borderWidth: 2,
+    borderColor: '#cccccc',
+    borderRadius: 5,
+    margin: 7,
+    width: 350,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 30,
+    margin: 10,
+  },
+  subtitle: {
+    fontSize: 20,
+    margin: 10,
+    color: '#999999',
+  },
 });
-
-export default Home;
