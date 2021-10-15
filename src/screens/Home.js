@@ -12,18 +12,44 @@ import {
 import 'react-native-gesture-handler';
 import GlobalStyle from '../utils/GlobalStyle';
 import CustomButton from '../utils/CustomButton';
+import SQLite from 'react-native-sqlite-storage';
 
-const ScreenA = ({navigation, route}) => {
+const db = SQLite.openDatabase(
+  {
+    name: 'MainDB',
+    location: 'default',
+  },
+  () => {},
+  err => console.log(err),
+);
+
+const Home = ({navigation, route}) => {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
+
   const getData = async () => {
     try {
-      AsyncStorage.getItem('User').then(value => {
-        if (value !== null) {
-          let user = JSON.parse(value);
-          setName(user.Name);
-          setAge(user.Age);
-        }
+      // AsyncStorage.getItem('User').then(value => {
+      //   if (value !== null) {
+      //     let user = JSON.parse(value);
+      //     setName(user.Name);
+      //     setAge(user.Age);
+      //   }
+      // });
+      db.transaction(tx => {
+        tx.executeSql(
+          'SELECT Name, Age FROM Users WHERE ID=1',
+          [],
+          (tx, result) => {
+            let len = result.rows.length;
+            if (len > 0) {
+              let userName = result.rows.item(0).Name;
+              let userAge = result.rows.item(0).Age;
+              setName(userName);
+              setAge(userAge);
+            }
+          },
+        );
       });
     } catch (err) {
       console.log(err);
@@ -35,11 +61,21 @@ const ScreenA = ({navigation, route}) => {
     else {
       //phải có try catch vì nếu đã là async thì chưa chắc sẽ thành công 100% (do đường truyền, do mất file,...)
       try {
-        const user = {
-          Name: name,
-        };
-        await AsyncStorage.mergeItem('User', JSON.stringify(user));
-        Alert.alert('Success', 'Your data has been updated');
+        // const user = {
+        //   Name: name,
+        // };
+        // await AsyncStorage.mergeItem('User', JSON.stringify(user));
+
+        db.transaction(tx => {
+          tx.executeSql(
+            'UPDATE Users SET Name=?',
+            [name],
+            () => {
+              Alert.alert('Success', 'Your data has been updated');
+            },
+            err => consolr.log(err),
+          );
+        });
       } catch (err) {
         Alert.alert(err);
       }
@@ -48,8 +84,17 @@ const ScreenA = ({navigation, route}) => {
 
   const deleteData = async () => {
     try {
-      await AsyncStorage.removeItem('User');
-      navigation.navigate('Login');
+      // await AsyncStorage.removeItem('User');
+      db.transaction(tx => {
+        tx.executeSql(
+          'DELETE FROM Users',
+          [],
+          () => {
+            navigation.navigate('Login');
+          },
+          err => console.log(err),
+        );
+      });
     } catch (err) {
       Alert.alert('error!');
     }
@@ -107,4 +152,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScreenA;
+export default Home;
