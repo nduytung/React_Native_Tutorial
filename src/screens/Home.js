@@ -13,7 +13,7 @@ import 'react-native-gesture-handler';
 import GlobalStyle from '../utils/GlobalStyle';
 import CustomButton from '../utils/CustomButton';
 
-const ScreenA = ({navigation, route}) => {
+const Login = ({navigation, route}) => {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const getData = async () => {
@@ -107,4 +107,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScreenA;
+export default Login;

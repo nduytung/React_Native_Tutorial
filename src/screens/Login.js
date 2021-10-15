@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useState} from 'react/cjs/react.development';
 const {
   View,
@@ -32,6 +32,23 @@ const Login = ({navigation}) => {
       }
     }
   };
+
+  const getData = async () => {
+    try {
+      AsyncStorage.getItem('User').then(value => {
+        if (value !== null) {
+          navigation.navigate('Home');
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  });
+
   return (
     <View style={styles.body}>
       <Image style={styles.logo} source={require('../../assets/sqlite.png')} />
