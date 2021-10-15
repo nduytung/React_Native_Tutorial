@@ -124,6 +124,11 @@ export default function Home({navigation, route}) {
       <Text style={[GlobalStyle.CustomFont, styles.text]}>
         Welcome {name} !
       </Text>
+      <CustomButton
+        title="Open camera"
+        color="dodgerblue"
+        onPressHandler={() => navigation.navigate('Camera')}
+      />
       <FlatList
         data={cities}
         keyExtractor={(item, index) => index.toString()}

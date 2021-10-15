@@ -16,6 +16,7 @@ import Home from './screens/Home';
 import {Provider} from 'react-redux';
 import {Store} from './redux/store';
 import Map from './screens/Map';
+import Camera from './screens/Camera';
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Map" component={Map} />
+          <Stack.Screen name="Camera" component={Camera} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
