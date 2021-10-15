@@ -128,7 +128,15 @@ export default function Home({navigation, route}) {
         data={cities}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (
-          <TouchableOpacity onPress={() => handleNotification(item)}>
+          <TouchableOpacity
+            onPress={() => {
+              handleNotification(item);
+              navigation.navigate('Map', {
+                city: item.city,
+                lat: item.lat,
+                lng: item.lng,
+              });
+            }}>
             <View style={styles.item}>
               <Text style={styles.title}>{item.country || 'not found'}</Text>
               <Text style={styles.subtitle}>{item.city || 'not found'}</Text>

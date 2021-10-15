@@ -19,6 +19,7 @@
     "react": "17.0.2",
     "react-native": "0.66.0",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-maps": "https://github.com/react-community/react-native-maps.git",
     "react-native-pager-view": "^5.4.7",
     "react-native-paper": "^4.9.2",
     "react-native-push-notification": "^8.1.1",
