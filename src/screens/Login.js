@@ -51,7 +51,7 @@ const Login = ({navigation}) => {
 
   return (
     <View style={styles.body}>
-      <Image style={styles.logo} source={require('../../assets/sqlite.png')} />
+      <Image style={styles.logo} source={require('../../assets/done.png')} />
       <Text style={styles.text}> Async storage </Text>
       <TextInput
         onChangeText={value => setName(value)}
