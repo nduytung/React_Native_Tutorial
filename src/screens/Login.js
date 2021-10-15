@@ -11,6 +11,9 @@ const {
 import CustomButton from '../utils/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
+import {useSelector, useDispatch} from 'react-redux';
+import {setAge, setName} from '../redux/actions';
+import userReducer from '../redux/reducers';
 
 const db = SQLite.openDatabase(
   {
@@ -22,8 +25,13 @@ const db = SQLite.openDatabase(
 );
 
 const Login = ({navigation, route}) => {
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
+  //lay state nay tu store thay vi khai bao cuc bo
+  const {name, age} = useSelector(state => state.userReducer);
+  //dispatch dung de goi cac actions
+  const dispatch = useDispatch();
+
+  // const [name, setName] = useState('');
+  // const [age, setAge] = useState('');
 
   const createTable = () => {
     db.transaction(tx => {
@@ -65,15 +73,9 @@ const Login = ({navigation, route}) => {
     else {
       //phải có try catch vì nếu đã là async thì chưa chắc sẽ thành công 100% (do đường truyền, do mất file,...)
       try {
-        // const user = {
-        //   Name: name,
-        //   Age: age,
-        // };
-        // await AsyncStorage.setItem('User', JSON.stringify(user));
+        dispatch(setName(name));
+        dispatch(setAge(age));
         db.transaction(async tx => {
-          // await tx.executeSql(
-          //   "INSERT INTO Users (Name, Age) VALUES ('" + name + "'," + age + ')',
-          // );
           await tx.executeSql('INSERT INTO Users (Name, Age) VALUES (?,?)', [
             name,
             age,
@@ -88,15 +90,15 @@ const Login = ({navigation, route}) => {
 
   return (
     <View style={styles.body}>
-      <Image style={styles.logo} source={require('../../assets/sqlite.png')} />
+      <Image style={styles.logo} source={require('../../assets/redux.png')} />
       <Text style={styles.text}> Async storage </Text>
       <TextInput
-        onChangeText={value => setName(value)}
+        onChangeText={value => dispatch(setName(value))}
         style={styles.input}
         placeholder="Enter your name"
       />
       <TextInput
-        onChangeText={value => setAge(value)}
+        onChangeText={value => dispatch(setAge(value))}
         style={styles.input}
         placeholder="Enter your age"
       />
@@ -112,9 +114,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'dodgerblue',
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
     margin: 20,
+    marginBottom: 100,
   },
   text: {
     color: 'white',

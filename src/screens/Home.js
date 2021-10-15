@@ -13,6 +13,9 @@ import 'react-native-gesture-handler';
 import GlobalStyle from '../utils/GlobalStyle';
 import CustomButton from '../utils/CustomButton';
 import SQLite from 'react-native-sqlite-storage';
+import {useSelector, useDispatch} from 'react-redux';
+import {increaseAge, setAge, setName} from '../redux/actions';
+import userReducer from '../redux/reducers';
 
 const db = SQLite.openDatabase(
   {
@@ -24,8 +27,10 @@ const db = SQLite.openDatabase(
 );
 
 const Home = ({navigation, route}) => {
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
+  //lay state nay tu store thay vi khai bao cuc bo
+  const {name, age} = useSelector(state => state.userReducer);
+  //dispatch dung de goi cac actions
+  const dispatch = useDispatch();
 
   const getData = async () => {
     try {
@@ -45,8 +50,8 @@ const Home = ({navigation, route}) => {
             if (len > 0) {
               let userName = result.rows.item(0).Name;
               let userAge = result.rows.item(0).Age;
-              setName(userName);
-              setAge(userAge);
+              dispatch(setName(userName));
+              dispatch(setAge(userAge));
             }
           },
         );
@@ -73,7 +78,7 @@ const Home = ({navigation, route}) => {
             () => {
               Alert.alert('Success', 'Your data has been updated');
             },
-            err => consolr.log(err),
+            err => console.log(err),
           );
         });
       } catch (err) {
@@ -114,7 +119,7 @@ const Home = ({navigation, route}) => {
         You are {age} years old now{' '}
       </Text>
       <TextInput
-        onChangeText={value => setName(value)}
+        onChangeText={value => dispatch(setName(value))}
         style={styles.input}
         placeholder="Enter your name"
       />
@@ -123,6 +128,11 @@ const Home = ({navigation, route}) => {
         title="Delete"
         onPressHandler={deleteData}
         style={{marginTop: 10, backgroundColor: 'red'}}
+      />
+      <CustomButton
+        title="Increase age"
+        onPressHandler={() => dispatch(increaseAge())}
+        style={{marginTop: 10, backgroundColor: 'dodgerblue'}}
       />
     </View>
   );

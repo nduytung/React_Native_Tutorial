@@ -13,17 +13,22 @@ const Stack = createStackNavigator();
 
 import Login from './screens/Login';
 import Home from './screens/Home';
+import {Provider} from 'react-redux';
+import {Store} from './redux/store';
 
 const App = () => {
   return (
-    <NavigationContainer>
-      {/* đổi thành stack navigator vì tab navigator không thể truyền các props đuọc  */}
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        {/* vì một số hạn chế của RN, đừng copy screen A rồi đổi tên thành screen B. HÃY GÕ MỚI HOÀN TOÀN  */}
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={Home} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    //boc tat ca bang redux provider
+    <Provider store={Store}>
+      <NavigationContainer>
+        {/* đổi thành stack navigator vì tab navigator không thể truyền các props đuọc  */}
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          {/* vì một số hạn chế của RN, đừng copy screen A rồi đổi tên thành screen B. HÃY GÕ MỚI HOÀN TOÀN  */}
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Home" component={Home} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
 
