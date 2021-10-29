@@ -1,67 +1,43 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, Button, Linking} from 'react-native';
+import {StyleSheet, View, Text, Button} from 'react-native';
 
-//hàm này sẽ render ra tất cả các nội dung hiển thị
 const App = () => {
-  const [name, setName] = useState('Style test');
+  const [name, setName] = useState('Style Test');
 
   const onClickHandler = () => {
-    setName('Style test is done');
+    setName('Style Test is Done!');
   };
 
   return (
-    //chèn file styles.body vào đây
     <View style={styles.body}>
-      <View style={styles.view1}>
-        <Text style={styles.text}> 1</Text>
-      </View>
-      <View style={styles.view2}>
-        <Text style={styles.text}> 2 </Text>
-      </View>
-      <View style={styles.view3}>
-        <Text style={styles.text}> 3 </Text>
+      <Text style={styles.text}>{name}</Text>
+      <View style={styles.button}>
+        <Button title="Update State" onPress={onClickHandler}></Button>
       </View>
     </View>
   );
 };
 
-//ta có thể hiểu "styles" này gần giống như một file css, nó format lại định dạng hiển thị cho chúng ta
-//các classname gần tương tự như ở CSS, ta có thể sử dụng extension auto import để nó gợi ý
 const styles = StyleSheet.create({
   body: {
     flex: 1,
+    backgroundColor: '#ffff00',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 10,
+    borderColor: '#ff00ff',
     borderRadius: 10,
-    alignItems: 'stretch',
-  },
-
-  view1: {
-    flex: 1,
-    backgroundColor: 'cyan',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  view2: {
-    flex: 1,
-    backgroundColor: 'pink',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  view3: {
-    flex: 1,
-    backgroundColor: 'yellow',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   text: {
-    color: 'black',
-    fontSize: 40,
+    color: '#000000',
+    fontSize: 35,
     fontStyle: 'italic',
     margin: 10,
     textTransform: 'uppercase',
+  },
+  button: {
+    width: 200,
+    height: 60,
   },
 });
 
